@@ -165,32 +165,36 @@ int main() {
             storage1= split(input_buffer,2);
             
 
-        switch (storage1[0]) {
-            case 'a': case 'A': // motion if 'a' key is pressed
-
-                printf("Move LEFT", Storage1[1], "steps /n");
-                move_x_direction(storage1[1], 0);
-                break; // ends this case and goes back to the loop, does NOT exit program
-            case 'd': case 'D': // motion if 'd' key is pressed
-                printf("Move RIGHT\n");
-                move_x_direction(STEPS, 1);
-                break; // ends this case and goes back to the loop, does NOT exit program
-            case 'w': case 'W': // motion if 'w' key is pressed
-                printf("Move FORWARD\n");
-                move_y_direction(STEPS, 1);
-                break;// ends this case and goes back to the loop, does NOT exit program
-            case 's': case 'S':
-                printf("Move BACKWARD\n"); // motion if 's' key is pressed
-                move_y_direction(STEPS, 0);
-                break;// ends this case and goes back to the loop, does NOT exit program
-            case 'q': case 'Q': // motion if q' key is pressed
-                printf("Move UP\n");
-                move_z_direction(STEPS, 1);
-                break; // ends this case and goes back to the loop, does NOT exit program
-            case 'e': case 'E': // motion if 'e' key is pressed
-                printf("Move DOWN\n");
-                move_z_direction(STEPS, 0);
-                break; // ends this case and goes back to the loop, does NOT exit program
+            switch (storage1[0]) {
+                case 'a': case 'A': // motion if 'a' key is pressed
+                    printf("Move LEFT %d steps\n", storage1[1]);
+                    move_x_direction(storage1[1], 0);
+                    break; // ends this case and goes back to the loop, does NOT exit program
+            
+                case 'd': case 'D': // motion if 'd' key is pressed
+                    printf("Move RIGHT %d steps\n", storage1[1]);
+                    move_x_direction(storage1[1], 1);
+                    break;
+            
+                case 'w': case 'W': // motion if 'w' key is pressed
+                    printf("Move FORWARD %d steps\n", storage1[1]);
+                    move_y_direction(storage1[1], 1);
+                    break;
+            
+                case 's': case 'S': // motion if 's' key is pressed
+                    printf("Move BACKWARD %d steps\n", storage1[1]);
+                    move_y_direction(storage1[1], 0);
+                    break;
+            
+                case 'q': case 'Q': // motion if 'q' key is pressed
+                    printf("Move UP %d steps\n", storage1[1]);
+                    move_z_direction(storage1[1], 1);
+                    break;
+            
+                case 'e': case 'E': // motion if 'e' key is pressed
+                    printf("Move DOWN %d steps\n", storage1[1]);
+                    move_z_direction(storage1[1], 0);
+                    break;
             case 'p': case 'P': // case if p key is pressed
             printf("Enter new minimum delay (microseconds): ");
             
