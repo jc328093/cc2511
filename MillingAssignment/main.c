@@ -24,8 +24,15 @@
 #define DIR_CHANGE_DELAY_MS 100 // wait time after changing direction before stepping
 #define STEPS 100 // number of steps to take per movement.
 MIN_DELAY_US=200;   // Fastest speed
-#define MAX_DELAY_US 600   // Slowest speed
+MAX_DELAY_US= 600;   // Slowest speed
 int command[100];
+
+MAX_LINES = 20;
+MAX_LINE_LENGTH = 100;
+
+char lines[MAX_LINES][MAX_LINE_LENGTH];
+int line_count = 0;
+
 
 typedef union { // Define a union to hold either an integer or a string
     int i_val;
@@ -131,6 +138,27 @@ Element* split(const char* str, int* size) {
     return arr;
 }
 
+void line_wire_aquire() {
+    while (line_count < MAX_LINES) {
+        char buffer[MAX_LINE_LENGTH];
+
+        if (fgets(buffer, sizeof(buffer), stdin)) {
+            // Remove newline if present
+            size_t len = strlen(buffer);
+            if (len > 0 && (buffer[len - 1] == '\n' || buffer[len - 1] == '\r')) {
+                buffer[len - 1] = '\0';
+            }
+
+            strncpy(lines[line_count], buffer, MAX_LINE_LENGTH - 1);
+            lines[line_count][MAX_LINE_LENGTH - 1] = '\0'; // null-terminate
+            printf("Stored line %d: %s\n", line_count, lines[line_count]);
+
+            line_count++;
+        }
+    }
+
+}_
+
 // Main 
 int main() {
     stdio_init_all();
@@ -157,14 +185,32 @@ int main() {
     gpio_put(ENABLE_PIN, 0); // turning on the motor
     printf("X-Axis left and right (A/D), Y-Axis forward and back (W/S), Z-Axis up and down (Q/E)\n");
 
+    bool run_from_file = false;
+    
+    MAX_LINES 20;
+    MAX_LINE_LENGTH 100;
+
+    char lines[MAX_LINES][MAX_LINE_LENGTH];
+
+
     char input;
     while (true) {
         char input_buffer[16];
-            int new_delay;
+
+            if (run_from_file== true) {
+                if (linecount<MAX_LINE)
+                {
+                    storage1 = split(lines[linecount],2);
+                    linecount++
+                }
+                
+            }
+            else {
             fgets(input_buffer, sizeof(input_buffer), stdin); // reads a single character input from serial terminal
             storage1= split(input_buffer,2);
-            
 
+            
+            }
             switch (storage1[0]) {
                 case 'a': case 'A': // motion if 'a' key is pressed
                     printf("Move LEFT %d steps\n", storage1[1]);
@@ -199,10 +245,19 @@ int main() {
                     printf("Enter new minimum delay,  (microseconds): ");
                     MIN_DELAY_US = storage1[1]
                     printf("Updated minimum delay to %d us\n", storage1[1]);-
+                    break;
                 case 'm': case 'M': // case M
                     printf("Enter new minimum delay,  (microseconds): ");
                     MIN_DELAY_US = storage1[1]
                     printf("Updated minimum delay to %d us\n", storage1[1]);
+                    break;
+                case 'I': case 'i': // case I
+                    line_wire_aquire()
+                    runfromfile=true 
+                    line_count = 0
+                    break;
+                
+            
             
             default:
                 printf("Invalid input: %c\n", input);
