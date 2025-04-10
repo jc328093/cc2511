@@ -195,24 +195,15 @@ int main() {
                     printf("Move DOWN %d steps\n", storage1[1]);
                     move_z_direction(storage1[1], 0);
                     break;
-            case 'p': case 'P': // case if p key is pressed
-            printf("Enter new minimum delay (microseconds): ");
+                case 'n': case 'N': // case if N key is pressed
+                    printf("Enter new minimum delay,  (microseconds): ");
+                    MIN_DELAY_US = storage1[1]
+                    printf("Updated minimum delay to %d us\n", storage1[1]);-
+                case 'm': case 'M': // case M
+                    printf("Enter new minimum delay,  (microseconds): ");
+                    MIN_DELAY_US = storage1[1]
+                    printf("Updated minimum delay to %d us\n", storage1[1]);
             
-        
-            // Read from standard input
-            fgets(input_buffer, sizeof(input_buffer), stdin);
-        
-            // Convert string to integer
-            if (sscanf(input_buffer, "%d", &new_delay) == 1) {
-                MIN_DELAY_US = new_delay;
-                printf("Updated minimum delay to %d us\n", MIN_DELAY_US);
-            } else {
-                printf("Invalid input. Please enter a number.\n");
-            }
-            break;
-
-
-
             default:
                 printf("Invalid input: %c\n", input);
         }
