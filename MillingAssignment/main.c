@@ -209,13 +209,18 @@ void line_wire_aquire(int max_lines) {
     }
 }
 
-// Main
-int main() {
+void handshake() {
     stdio_usb_init();
     while (!stdio_usb_connected()) sleep_ms(100);
     setvbuf(stdout, NULL, _IONBF, 0);
     setvbuf(stdin, NULL, _IONBF, 0);
 
+}
+
+
+// Main
+int main() {
+    handshake()
     // GPIO setup
     gpio_init(ENABLE_PIN); gpio_set_dir(ENABLE_PIN, GPIO_OUT);
     gpio_init(X_STEP_PIN); gpio_set_dir(X_STEP_PIN, GPIO_OUT);
