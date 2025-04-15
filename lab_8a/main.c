@@ -26,9 +26,9 @@
  
  extern int is_number(const char* str); // Ensure this is implemented
  
- #define GPIO_OUT_PINR 15
- #define GPIO_OUT_PING 16
- #define GPIO_OUT_PINB 17
+ #define GPIO_OUT_PINR 11
+ #define GPIO_OUT_PING 12
+ #define GPIO_OUT_PINB 13
  
  #define MAX_COMMAND_LENGTH 100  // Maximum command length
  
@@ -48,9 +48,9 @@
      slice_numG = pwm_gpio_to_slice_num(GPIO_OUT_PING);  // Get PWM slice
      slice_numB = pwm_gpio_to_slice_num(GPIO_OUT_PINB);  // Get PWM slice
  
-     pwm_set_wrap(slice_numR, 1000);          // PWM counter range
-     pwm_set_wrap(slice_numG, 1000);          // PWM counter range
-     pwm_set_wrap(slice_numB, 1000);          // PWM counter range
+     pwm_set_wrap(slice_numR, 255);          // PWM counter range
+     pwm_set_wrap(slice_numG, 255);          // PWM counter range
+     pwm_set_wrap(slice_numB, 255);          // PWM counter range
  
      pwm_set_chan_level(slice_numR, pwm_gpio_to_channel(GPIO_OUT_PINR), 0);
      pwm_set_chan_level(slice_numG, pwm_gpio_to_channel(GPIO_OUT_PING), 0);
@@ -122,6 +122,15 @@
      return buffer;
  }
  
+ int is_number(const char* str) {
+     if (*str == '\0') return 0;
+     while (*str) {
+         if (!isdigit((unsigned char)*str)) return 0;
+         str++;
+     }
+     return 1;
+ }
+ 
  Element* split(const char* str, int* size) {
      int count = 1;
      for (int i = 0; str[i] != '\0'; i++) {
@@ -163,6 +172,8 @@
      char input_buffer[MAX_COMMAND_LENGTH];
      Element* Storage1 = NULL;
  
+     double outputval;
+ 
      while (true) {
          printf("Enter a command (R/G/B): ");
  
@@ -175,18 +186,20 @@
              continue;
          }
  
+         outputval = ((Storage1[1].value.i_val * Storage1[1].value.i_val) / 10000.0) * 255.0; // perceptual brightness correction
+ 
          switch (Storage1[0].value.s_val[0]) {
-             case 'R':  // Red command
+             case 'R': case 'r': // Red command
                  printf("Red command received\n");
-                 pwm_set_chan_level(slice_numR, pwm_gpio_to_channel(GPIO_OUT_PINR), Storage1[1].value.i_val);
+                 pwm_set_chan_level(slice_numR, pwm_gpio_to_channel(GPIO_OUT_PINR), (uint16_t)outputval);
                  break;
-             case 'G':  // Green command
+             case 'G': case 'g': // Green command
                  printf("Green command received\n");
-                 pwm_set_chan_level(slice_numG, pwm_gpio_to_channel(GPIO_OUT_PING), Storage1[1].value.i_val);
+                 pwm_set_chan_level(slice_numG, pwm_gpio_to_channel(GPIO_OUT_PING), (uint16_t)outputval);
                  break;
-             case 'B':  // Blue command
+             case 'B': case 'b': // Blue command
                  printf("Blue command received\n");
-                 pwm_set_chan_level(slice_numB, pwm_gpio_to_channel(GPIO_OUT_PINB), Storage1[1].value.i_val);
+                 pwm_set_chan_level(slice_numB, pwm_gpio_to_channel(GPIO_OUT_PINB), (uint16_t)outputval);
                  break;
              default:
                  printf("Awaiting command\n");
